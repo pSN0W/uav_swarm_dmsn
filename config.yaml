@@ -1,0 +1,10 @@
+---
+num_sink_node: 10
+max_dist_btw_sink_node: 50
+min_dist_btw_sink_node: 10
+
+max_communication_time: 20
+min_communication_time: 10
+
+uav_range: 50
+...
