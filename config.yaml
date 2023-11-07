@@ -7,4 +7,6 @@ max_communication_time: 20
 min_communication_time: 10
 
 uav_range: 50
+height: 3
+radius: 5
 ...
