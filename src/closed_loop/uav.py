@@ -5,18 +5,28 @@ from .sink_node import SinkNode
 
 
 class UAV:
-
-    def __init__(self, x: float, y: float, z: float) -> None:
-        """Constructor 
+    def __init__(
+        self, canvas: "Canvas", x: float, y: float, z: float, r: float, size:int = 20
+    ) -> None:
+        """Constructor
 
         Args:
+            canvas(tk.Canvas): tkinter canvas
             x (float): x cordinate for UAV
             y (float): y cordinate of UAV
             z (float): z cordinate of UAV
+            r (float): projection on ground
         """
+        self.canvas = canvas
         self.x = x
         self.y = y
         self.z = z
+        self.square_id = canvas.create_rectangle(
+            x - size / 2, y - size / 2, x + size / 2, y + size / 2, fill="red"
+        )
+        self.circle_id = canvas.create_oval(
+            x - size, y - size, x + size, y + size, outline="green", width=2
+        )
 
     def move(self, delta_x: float, delta_y: float, delta_z: float) -> None:
         """Move the UAV to a new cordinate
