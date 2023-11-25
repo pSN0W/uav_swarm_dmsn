@@ -3,23 +3,26 @@ from typing import List
 
 import numpy as np
 
+import tkinter as tk
+
 from ..constants import CONFIG
 from .misn import MISN
 from .uav import UAV
 
 
 class UAVSwarm:
-    def __init__(self, misn: MISN) -> None:
+    def __init__(self, misn: MISN, canvas: tk.Canvas) -> None:
         self.config = CONFIG
+        self.canvas = canvas
         self.misn = misn
         self.r = round(math.sqrt(CONFIG["radius"] ** 2 - CONFIG["height"] ** 2), 2)
-        self.uavs = self.build_uav(
-            center_x=0,
-            center_y=0,
-            edge_length=CONFIG["num_uav"],
-            sides=CONFIG["radius"] * 2,
-        )
         self.node_classification = self.misn.sink_node_classification(self.r)
+        self.uavs = self.build_uav(
+            center_x=50,
+            center_y=50,
+            edge_length=CONFIG["radius"] * 2,
+            sides=CONFIG["num_uav"],
+        )
 
     def generate_path_for_uav(self):
         best_route, best_distance = self.ant_colony_optimization(
@@ -90,5 +93,13 @@ class UAVSwarm:
             angle_rad = math.radians(i * angle_increment)
             x_i = center_x + radius * math.cos(angle_rad)
             y_i = center_y + radius * math.sin(angle_rad)
-            uavs.append(UAV(x=round(x_i,2), y=round(y_i,2), z=self.config["height"]))
+            uavs.append(
+                UAV(
+                    x=round(x_i, 2),
+                    y=round(y_i, 2),
+                    z=self.config["height"],
+                    canvas=self.canvas,
+                    r=self.r,
+                )
+            )
         return uavs

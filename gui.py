@@ -1,6 +1,7 @@
 import tkinter as tk
 
 from src.closed_loop.misn import MISN
+from src.closed_loop.swarm import UAVSwarm
 from src.constants import CONFIG
 
 
@@ -26,7 +27,11 @@ if __name__ == "__main__":
         bg="white",
     )
     canvas.pack()
-
+    uav_swarm = UAVSwarm(
+        misn=misn,
+        canvas=canvas
+    )
+    print(len(uav_swarm.uavs))
     # Draw triangles at specified coordinates
     for node in misn.sink_nodes:
         draw_triangle(canvas, *node.get_cords())

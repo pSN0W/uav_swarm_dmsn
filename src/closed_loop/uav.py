@@ -6,7 +6,7 @@ from .sink_node import SinkNode
 
 class UAV:
     def __init__(
-        self, canvas: "Canvas", x: float, y: float, z: float, r: float, size:int = 20
+        self, canvas: "Canvas", x: float, y: float, z: float, r: float
     ) -> None:
         """Constructor
 
@@ -21,11 +21,14 @@ class UAV:
         self.x = x
         self.y = y
         self.z = z
+        self.r = r
+        
+        size = self.r/3
         self.square_id = canvas.create_rectangle(
             x - size / 2, y - size / 2, x + size / 2, y + size / 2, fill="red"
         )
         self.circle_id = canvas.create_oval(
-            x - size, y - size, x + size, y + size, outline="green", width=2
+            x - self.r, y - self.r, x + self.r, y + self.r, outline="green", width=2
         )
 
     def move(self, delta_x: float, delta_y: float, delta_z: float) -> None:
