@@ -28,7 +28,9 @@ class UAVSwarm:
             edge_length=CONFIG["radius"] * 2,
             sides=CONFIG["num_uav"],
         )
-        self.path = self.generate_path_for_uav()
+        
+        self.path = self.generate_path_for_uav()[:-1]
+        self.misn_to_reach_idx = 0 
         self.move()
 
     def generate_path_for_uav(self):
@@ -112,7 +114,7 @@ class UAVSwarm:
         return uavs
 
     def get_next_move(self):
-        to_reach = self.path[0].get_cords()
+        to_reach = self.path[self.misn_to_reach_idx].get_cords()
         dist_x = to_reach[0] - self.x
         dist_y = to_reach[1] - self.y
         distance = math.sqrt(dist_x**2 + dist_y**2)
@@ -126,7 +128,11 @@ class UAVSwarm:
             self.x += delta_x
             self.y += delta_y
             return delta_x, delta_y
-        return None, None
+        else:
+            self.misn_to_reach_idx += 1
+            if self.misn_to_reach_idx == len(self.path):
+                self.misn_to_reach_idx = 0
+            return self.get_next_move()
 
     def move(self):
         delta_x, delta_y = self.get_next_move()
