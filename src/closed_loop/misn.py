@@ -2,15 +2,19 @@ import math
 import random
 from typing import List, Set, Tuple
 
+import tkinter as tk
+
 from ..constants import CONFIG
 from .sink_node import SinkNode
 
 
 class MISN:
-    def __init__(self) -> None:
+    def __init__(self, canvas: tk.Canvas) -> None:
         """Constructor"""
 
         self.config = CONFIG
+        self.canvas = canvas
+        
         self.num_sink_node = self.config["num_sink_node"]
         self.sink_nodes = self.build_misn()
 
@@ -37,7 +41,10 @@ class MISN:
             if valid:
                 points.append(point)
 
-        return [SinkNode(round(point[0],2), round(point[1],2)) for point in points]
+        return [
+            SinkNode(round(point[0], 2), round(point[1], 2), canvas=self.canvas)
+            for point in points
+        ]
 
     def sink_node_classification(
         self, r: float
@@ -77,7 +84,9 @@ class MISN:
                     include = False
             print(include)
             if include:
-                required_neighborhood.append((curr_sink_node, current_sink_node_nbrhood))
+                required_neighborhood.append(
+                    (curr_sink_node, current_sink_node_nbrhood)
+                )
         return required_neighborhood
 
     def generate_random_point(self) -> list[float, float]:
@@ -111,6 +120,6 @@ class MISN:
         x1, y1 = point1
         x2, y2 = point2
         return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-    
+
     def __repr__(self) -> str:
         return f"MISN({','.join([str(node) for node in self.sink_nodes])})"

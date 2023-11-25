@@ -30,7 +30,10 @@ class UAVSwarm:
         self.misn = misn
         self.node_classification = self.misn.sink_node_classification(self.r)
         self.time_of_transfer_at_node = self.get_wait_time_at_each_misn()
-        
+        self.nbr_of_node = {
+            node: list(node_nbrhood) for node, node_nbrhood in self.node_classification
+        }
+
         self.path = self.generate_path_for_uav()[:-1]
         self.misn_to_reach_idx = 0
         self.move()
@@ -41,8 +44,10 @@ class UAVSwarm:
             for sink_node, _ in self.node_classification
         }
         for sink_node, sink_node_nbrhood in self.node_classification:
-            for nbr in sink_node_nbrhood:
-                time_to_transfer[sink_node] = max([time_to_transfer[sink_node], nbr.time_for_transfer])
+            for nbr in list(sink_node_nbrhood):
+                time_to_transfer[sink_node] = max(
+                    [time_to_transfer[sink_node], nbr.time_for_transfer]
+                )
         return time_to_transfer
 
     def generate_path_for_uav(self):
@@ -141,7 +146,12 @@ class UAVSwarm:
             self.y += delta_y
             return delta_x, delta_y
         else:
+            for node in self.nbr_of_node[self.path[self.misn_to_reach_idx]]:
+                node.mark_for_transference()
             time.sleep(self.time_of_transfer_at_node[self.path[self.misn_to_reach_idx]])
+            for node in self.nbr_of_node[self.path[self.misn_to_reach_idx]]:
+                node.complete_transfer()
+            
             self.misn_to_reach_idx += 1
             if self.misn_to_reach_idx == len(self.path):
                 self.misn_to_reach_idx = 0
