@@ -37,7 +37,7 @@ class MISN:
             if valid:
                 points.append(point)
 
-        return [SinkNode(point[0], point[1]) for point in points]
+        return [SinkNode(round(point[0],2), round(point[1],2)) for point in points]
 
     def sink_node_classification(
         self, r: float
@@ -62,7 +62,7 @@ class MISN:
             sink_node_neighborhood.append(
                 (current_sink_node, current_sink_node_nbrhood)
             )
-
+        print(sink_node_neighborhood)
         # delete those sink node that are already part of other.
         # Add nbrhood with more then 2 neighbors to high and other to low
         required_neighborhood: List[Set[SinkNode]] = []
@@ -75,9 +75,9 @@ class MISN:
                     current_sink_node_nbrhood.intersection(sink_node_nbrhood)
                 ):
                     include = False
-        if include:
-            required_neighborhood.append((curr_sink_node, current_sink_node_nbrhood))
-
+            print(include)
+            if include:
+                required_neighborhood.append((curr_sink_node, current_sink_node_nbrhood))
         return required_neighborhood
 
     def generate_random_point(self) -> list[float, float]:

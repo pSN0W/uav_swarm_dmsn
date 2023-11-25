@@ -90,5 +90,5 @@ class UAVSwarm:
             angle_rad = math.radians(i * angle_increment)
             x_i = center_x + radius * math.cos(angle_rad)
             y_i = center_y + radius * math.sin(angle_rad)
-            uavs.append(UAV(x=x_i, y=y_i, z=self.config["height"]))
+            uavs.append(UAV(x=round(x_i,2), y=round(y_i,2), z=self.config["height"]))
         return uavs
