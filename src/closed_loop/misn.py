@@ -1,5 +1,6 @@
 import math
 import random
+from typing import List,Set,Tuple
 
 from constants import CONFIG
 from sink_node import SinkNode
@@ -12,30 +13,6 @@ class MISN:
         self.config = CONFIG
         self.num_sink_node = self.config["num_sink_node"]
         self.sink_nodes = self.build_misn()
-
-    def get_sink_node_in_range(
-        self, uav_projection: list[float, float], max_dist: float
-    ) -> list[SinkNode]:
-        """Get all the sink node that are inside a distance max_dist from the projection
-
-        Args:
-            uav_projection (list[float,float]): The projection of UAV on the ground
-            max_dist (float): Distance from projection to include the sink node
-
-        Returns:
-            list[SinkNode]: Nodes that are inside the area
-        """
-        nodes_covered: list[SinkNode] = []
-
-        for node in self.sink_nodes:
-            sink_node_loc = [node.x, node.y]
-            if (
-                self.distance(sink_node_loc, uav_projection) <= max_dist
-                and not node.mark_for_transference
-            ):
-                nodes_covered.append(node)
-
-        return nodes_covered
 
     def build_misn(self) -> list[SinkNode]:
         """Build a multiple isolated sensory network with the sink nodes
@@ -61,6 +38,49 @@ class MISN:
                 points.append(point)
 
         return [SinkNode(point[0], point[1]) for point in points]
+
+    def sink_node_classification(
+        self, r: float
+    ) -> List[Tuple[SinkNode, Set[SinkNode]]]:
+        """classifies non overlapping sinknode in high and low density regions
+
+        Args:
+            r (float): The projection of drone on grpund
+
+        Returns:
+            List[Tuple[SinkNode,Set[SinkNode]]:  In the list you keep the representative sink node and set of all points in its neighborhood
+        """
+        sink_node_neighborhood: List[Tuple[SinkNode, Set[SinkNode]]] = []
+
+        # Add the sink nodes below distance r in same neighborhood
+        for i, current_sink_node in enumerate(self.sink_nodes):
+            current_sink_node_nbrhood = set([current_sink_node])
+            for sink_node in self.sink_nodes[:i]:
+                if current_sink_node.distance(sink_node) < r:
+                    current_sink_node_nbrhood.add(sink_node)
+
+            sink_node_neighborhood.append(
+                (current_sink_node, current_sink_node_nbrhood)
+            )
+
+        # delete those sink node that are already part of other.
+        # Add nbrhood with more then 2 neighbors to high and other to low
+        required_neighborhood: List[Set[SinkNode]] = []
+        for curr_idx, curr_sink_node, current_sink_node_nbrhood in enumerate(
+            sink_node_neighborhood
+        ):
+            include = True
+            for idx, _, sink_node_nbrhood in enumerate(sink_node_neighborhood):
+                if idx != curr_idx and len(current_sink_node_nbrhood) == len(
+                    current_sink_node_nbrhood.intersection(sink_node_nbrhood)
+                ):
+                    include = False
+        if include:
+            required_neighborhood.append(
+                (curr_sink_node, current_sink_node_nbrhood)
+            )
+
+        return required_neighborhood
 
     def generate_random_point(self) -> list[float, float]:
         """generate a random point for misn
