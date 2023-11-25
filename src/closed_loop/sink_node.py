@@ -1,6 +1,5 @@
 import math
 import random
-import time
 from typing import Tuple
 
 from constants import CONFIG
