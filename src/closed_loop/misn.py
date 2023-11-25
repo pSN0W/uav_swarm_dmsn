@@ -98,7 +98,7 @@ class MISN:
             random.uniform(0, max_allowed_cordinate),
         ]
 
-    def distance(point1: list[float, float], point2: list[float, float]) -> float:
+    def distance(self,point1: list[float, float], point2: list[float, float]) -> float:
         """Distance between two point
 
                Args:
