@@ -1,4 +1,5 @@
 import multiprocessing as mp
+import tkinter as tk
 
 from ..constants import CONFIG
 from .sink_node import SinkNode
@@ -6,7 +7,7 @@ from .sink_node import SinkNode
 
 class UAV:
     def __init__(
-        self, canvas: "Canvas", x: float, y: float, z: float, r: float
+        self, canvas: tk.Canvas, x: float, y: float, z: float, r: float
     ) -> None:
         """Constructor
 
@@ -31,18 +32,18 @@ class UAV:
             x - self.r, y - self.r, x + self.r, y + self.r, outline="green", width=2
         )
 
-    def move(self, delta_x: float, delta_y: float, delta_z: float) -> None:
+    def move(self, delta_x: float, delta_y: float) -> None:
         """Move the UAV to a new cordinate
 
         Args:
             delta_x (float): delta in x to move
             delta_y (float): delta in y to move
-            delta_z (float): delta in z to move
         """
         self.x += delta_x
         self.y += delta_y
-        self.z += delta_z
-
+        self.canvas.move(self.square_id,delta_x, delta_y)
+        self.canvas.move(self.circle_id,delta_x, delta_y)
+    
     def extract_data_from_node(self, sink_node: SinkNode) -> None:
         """Extract data from sink node
 

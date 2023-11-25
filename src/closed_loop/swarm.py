@@ -12,17 +12,22 @@ from .uav import UAV
 
 class UAVSwarm:
     def __init__(self, misn: MISN, canvas: tk.Canvas) -> None:
+        self.x = 50
+        self.y = 50
+        self.speed = 30
         self.config = CONFIG
         self.canvas = canvas
         self.misn = misn
         self.r = round(math.sqrt(CONFIG["radius"] ** 2 - CONFIG["height"] ** 2), 2)
         self.node_classification = self.misn.sink_node_classification(self.r)
         self.uavs = self.build_uav(
-            center_x=50,
-            center_y=50,
+            center_x=self.x,
+            center_y=self.y,
             edge_length=CONFIG["radius"] * 2,
             sides=CONFIG["num_uav"],
         )
+        self.path = self.generate_path_for_uav()
+        self.move()
 
     def generate_path_for_uav(self):
         best_route, best_distance = self.ant_colony_optimization(
@@ -103,3 +108,10 @@ class UAVSwarm:
                 )
             )
         return uavs
+
+    def move(self):
+        # to_reach = self.path[0].get_cords()
+        # dist_x = 
+        for uav in self.uavs:
+            uav.move(0, 10)
+        self.canvas.after(100, self.move)
