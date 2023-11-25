@@ -2,7 +2,7 @@ import math
 import random
 from typing import Tuple
 
-from constants import CONFIG
+from ..constants import CONFIG
 
 
 class SinkNode:

@@ -3,7 +3,7 @@ from typing import List
 
 import numpy as np
 
-from constants import CONFIG
+from ..constants import CONFIG
 from .misn import MISN
 from .uav import UAV
 
@@ -24,6 +24,8 @@ class UAVSwarm:
         best_route, best_distance = self.ant_colony_optimization(
             num_ants=self.config["num_ants"], num_iterations=self.config["num_epochs"]
         )
+        print("Minimum distance required ",best_distance)
+        return best_route
 
     def ant_colony_optimization(self, num_ants: int, num_iterations: int):
         cities = [sink_node for sink_node, _ in self.misn.sink_node_classification(self.r)]

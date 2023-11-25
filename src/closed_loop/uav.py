@@ -1,7 +1,7 @@
 import multiprocessing as mp
 
-from constants import CONFIG
-from sink_node import SinkNode
+from ..constants import CONFIG
+from .sink_node import SinkNode
 
 
 class UAV:

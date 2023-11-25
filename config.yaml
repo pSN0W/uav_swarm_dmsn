@@ -10,4 +10,7 @@ num_uav: 4
 uav_range: 50
 height: 3
 radius: 5
+
+num_ants: 5
+num_epochs: 20
 ...

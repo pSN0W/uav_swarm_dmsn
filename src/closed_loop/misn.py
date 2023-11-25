@@ -1,9 +1,9 @@
 import math
 import random
-from typing import List,Set,Tuple
+from typing import List, Set, Tuple
 
-from constants import CONFIG
-from sink_node import SinkNode
+from ..constants import CONFIG
+from .sink_node import SinkNode
 
 
 class MISN:
@@ -66,19 +66,17 @@ class MISN:
         # delete those sink node that are already part of other.
         # Add nbrhood with more then 2 neighbors to high and other to low
         required_neighborhood: List[Set[SinkNode]] = []
-        for curr_idx, curr_sink_node, current_sink_node_nbrhood in enumerate(
+        for curr_idx, (curr_sink_node, current_sink_node_nbrhood) in enumerate(
             sink_node_neighborhood
         ):
             include = True
-            for idx, _, sink_node_nbrhood in enumerate(sink_node_neighborhood):
+            for idx, (_, sink_node_nbrhood) in enumerate(sink_node_neighborhood):
                 if idx != curr_idx and len(current_sink_node_nbrhood) == len(
                     current_sink_node_nbrhood.intersection(sink_node_nbrhood)
                 ):
                     include = False
         if include:
-            required_neighborhood.append(
-                (curr_sink_node, current_sink_node_nbrhood)
-            )
+            required_neighborhood.append((curr_sink_node, current_sink_node_nbrhood))
 
         return required_neighborhood
 
@@ -98,7 +96,7 @@ class MISN:
             random.uniform(0, max_allowed_cordinate),
         ]
 
-    def distance(self,point1: list[float, float], point2: list[float, float]) -> float:
+    def distance(self, point1: list[float, float], point2: list[float, float]) -> float:
         """Distance between two point
 
                Args:
