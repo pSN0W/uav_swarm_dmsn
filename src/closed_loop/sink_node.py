@@ -23,12 +23,11 @@ class SinkNode:
         time_for_transfer = random.uniform(
             self.config['min_communication_time'],
             self.config['max_communication_time'])
-
-        # wait for that amout of time
-        time.sleep(time_for_transfer)
         
         # transferance or data complete
         self.transfering_data = False
+        
+        return time_for_transfer
         
     def mark_for_transference(self) -> None:
         """Mark the sink node to transfer data
