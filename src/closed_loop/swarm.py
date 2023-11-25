@@ -19,16 +19,17 @@ class UAVSwarm:
             edge_length=CONFIG["num_uav"],
             sides=CONFIG["radius"] * 2,
         )
+        self.node_classification = self.misn.sink_node_classification(self.r)
 
     def generate_path_for_uav(self):
         best_route, best_distance = self.ant_colony_optimization(
             num_ants=self.config["num_ants"], num_iterations=self.config["num_epochs"]
         )
-        print("Minimum distance required ",best_distance)
+        print("Minimum distance required ", best_distance)
         return best_route
 
     def ant_colony_optimization(self, num_ants: int, num_iterations: int):
-        cities = [sink_node for sink_node, _ in self.misn.sink_node_classification(self.r)]
+        cities = [sink_node for sink_node, _ in self.node_classification]
         best_tour = None
         best_distance = math.inf
         for iteration in range(num_iterations):

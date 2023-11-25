@@ -54,3 +54,6 @@ class SinkNode:
         x1, y1 = self.get_cords()
         x2, y2 = other.get_cords()
         return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    
+    def __repr__(self) -> str:
+        return f"SinkNode {self.get_cords()}"
