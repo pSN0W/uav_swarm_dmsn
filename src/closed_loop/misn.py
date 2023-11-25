@@ -52,7 +52,7 @@ class MISN:
         """classifies non overlapping sinknode in high and low density regions
 
         Args:
-            r (float): The projection of drone on grpund
+            r (float): The projection of drone on ground
 
         Returns:
             List[Tuple[SinkNode,Set[SinkNode]]:  In the list you keep the representative sink node and set of all points in its neighborhood
@@ -63,7 +63,7 @@ class MISN:
         for i, current_sink_node in enumerate(self.sink_nodes):
             current_sink_node_nbrhood = set([current_sink_node])
             for sink_node in self.sink_nodes[:i]:
-                if current_sink_node.distance(sink_node) < r:
+                if current_sink_node.distance(sink_node) < 4*r:
                     current_sink_node_nbrhood.add(sink_node)
 
             sink_node_neighborhood.append(
