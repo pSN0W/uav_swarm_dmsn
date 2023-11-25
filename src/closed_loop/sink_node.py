@@ -18,17 +18,9 @@ class SinkNode:
         self.y = y
         self.transfering_data = False
         self.config = CONFIG
-
-    def transfer_data(self) -> None:
-        """Function to transfer data from sink node to UAVs"""
-        time_for_transfer = random.uniform(
+        self.time_for_transfer = random.uniform(
             self.config["min_communication_time"], self.config["max_communication_time"]
         )
-
-        # transferance or data complete
-        self.transfering_data = False
-
-        return time_for_transfer
 
     def mark_for_transference(self) -> None:
         """Mark the sink node to transfer data"""

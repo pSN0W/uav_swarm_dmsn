@@ -1,8 +1,8 @@
 import math
 from typing import List
+import time
 
 import numpy as np
-
 import tkinter as tk
 
 from ..constants import CONFIG
@@ -16,22 +16,34 @@ class UAVSwarm:
         self.y = 50
         self.speed = 30
         self.time_of_move = 100
+        self.canvas = canvas
 
         self.config = CONFIG
-        self.canvas = canvas
-        self.misn = misn
         self.r = round(math.sqrt(CONFIG["radius"] ** 2 - CONFIG["height"] ** 2), 2)
-        self.node_classification = self.misn.sink_node_classification(self.r)
         self.uavs = self.build_uav(
             center_x=self.x,
             center_y=self.y,
             edge_length=CONFIG["radius"] * 2,
             sides=CONFIG["num_uav"],
         )
+
+        self.misn = misn
+        self.node_classification = self.misn.sink_node_classification(self.r)
+        self.time_of_transfer_at_node = self.get_wait_time_at_each_misn()
         
         self.path = self.generate_path_for_uav()[:-1]
-        self.misn_to_reach_idx = 0 
+        self.misn_to_reach_idx = 0
         self.move()
+
+    def get_wait_time_at_each_misn(self):
+        time_to_transfer = {
+            sink_node: sink_node.time_for_transfer
+            for sink_node, _ in self.node_classification
+        }
+        for sink_node, sink_node_nbrhood in self.node_classification:
+            for nbr in sink_node_nbrhood:
+                time_to_transfer[sink_node] = max([time_to_transfer[sink_node], nbr.time_for_transfer])
+        return time_to_transfer
 
     def generate_path_for_uav(self):
         best_route, best_distance = self.ant_colony_optimization(
@@ -118,7 +130,7 @@ class UAVSwarm:
         dist_x = to_reach[0] - self.x
         dist_y = to_reach[1] - self.y
         distance = math.sqrt(dist_x**2 + dist_y**2)
-        if distance > self.speed/2:
+        if distance > self.speed / 2:
             unit_direction_x = dist_x / distance
             unit_direction_y = dist_y / distance
             delta_x, delta_y = (
@@ -129,6 +141,7 @@ class UAVSwarm:
             self.y += delta_y
             return delta_x, delta_y
         else:
+            time.sleep(self.time_of_transfer_at_node[self.path[self.misn_to_reach_idx]])
             self.misn_to_reach_idx += 1
             if self.misn_to_reach_idx == len(self.path):
                 self.misn_to_reach_idx = 0
