@@ -18,7 +18,7 @@ if __name__ == "__main__":
     misn = MISN()
 
     root = tk.Tk()
-    root.title("Moveable Square and Circle on Triangles")
+    root.title("UAV Swarm Optimization Algorithm")
 
     canvas = tk.Canvas(
         root,
