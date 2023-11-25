@@ -13,7 +13,7 @@ def draw_triangle(canvas, x, y, size=20):
 
 
 if __name__ == "__main__":
-    edge_length = CONFIG["max_dist_btw_sink_node"] * CONFIG['num_sink_node'] * 10
+    edge_length = CONFIG["max_dist_btw_sink_node"] * CONFIG['num_sink_node'] * 10 + 10
     misn = MISN()
 
     root = tk.Tk()
