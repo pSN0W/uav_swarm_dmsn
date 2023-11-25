@@ -15,6 +15,8 @@ class UAVSwarm:
         self.x = 50
         self.y = 50
         self.speed = 30
+        self.time_of_move = 100
+
         self.config = CONFIG
         self.canvas = canvas
         self.misn = misn
@@ -109,9 +111,27 @@ class UAVSwarm:
             )
         return uavs
 
+    def get_next_move(self):
+        to_reach = self.path[0].get_cords()
+        dist_x = to_reach[0] - self.x
+        dist_y = to_reach[1] - self.y
+        distance = math.sqrt(dist_x**2 + dist_y**2)
+        if distance > self.speed/2:
+            unit_direction_x = dist_x / distance
+            unit_direction_y = dist_y / distance
+            delta_x, delta_y = (
+                self.speed * unit_direction_x,
+                self.speed * unit_direction_y,
+            )
+            self.x += delta_x
+            self.y += delta_y
+            return delta_x, delta_y
+        return None, None
+
     def move(self):
-        # to_reach = self.path[0].get_cords()
-        # dist_x = 
+        delta_x, delta_y = self.get_next_move()
+        if delta_x is None:
+            return
         for uav in self.uavs:
-            uav.move(0, 10)
-        self.canvas.after(100, self.move)
+            uav.move(delta_x, delta_y)
+        self.canvas.after(self.time_of_move, self.move)
