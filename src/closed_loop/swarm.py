@@ -55,6 +55,10 @@ class UAVSwarm:
             num_ants=self.config["num_ants"], num_iterations=self.config["num_epochs"]
         )
         print("Minimum distance required ", best_distance)
+        for sinknode1, sinknode2 in zip(best_route[:-1], best_route[1:]):
+            x1, y1 = sinknode1.get_cords()
+            x2, y2 = sinknode2.get_cords()
+            self.canvas.create_line(x1, y1, x2, y2, fill="red", width=5, arrow=tk.LAST)
         return best_route
 
     def ant_colony_optimization(self, num_ants: int, num_iterations: int):
@@ -151,7 +155,7 @@ class UAVSwarm:
             time.sleep(self.time_of_transfer_at_node[self.path[self.misn_to_reach_idx]])
             for node in self.nbr_of_node[self.path[self.misn_to_reach_idx]]:
                 node.complete_transfer()
-            
+
             self.misn_to_reach_idx += 1
             if self.misn_to_reach_idx == len(self.path):
                 self.misn_to_reach_idx = 0
